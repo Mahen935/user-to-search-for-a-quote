@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quote Search</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center">Quote Search</h1>
+        <form id="searchForm" class="mb-5">
+            <div class="input-group">
+                <input type="text" id="searchInput" class="form-control" placeholder="Search for quotes...">
+                <button type="submit" class="btn btn-primary">Search</button>
+            </div>
+        </form>
+        <div id="results" class="row mt-5"></div>
+    </div>
+
+    <script>
+        document.getElementById('searchForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const query = document.getElementById('searchInput').value;
+            fetch(`/api/quotes?search=${query}`)
+                .then(response => response.json())
+                .then(data => {
+                    const results = document.getElementById('results');
+                    results.innerHTML = '';
+                    data.forEach(quote => {
+                        const quoteCard = document.createElement('div');
+                        quoteCard.classList.add('col-md-4');
+                        quoteCard.innerHTML = `
+                            <div class="card mb-4">
+                                <div class="card-body">
+                                    <blockquote class="blockquote mb-0">
+                                        <p>${quote.text}</p>
+                                        <footer class="blockquote-footer">${quote.author}</footer>
+                                    </blockquote>
+                                    <button class="btn btn-warning mt-2" onclick="favouriteQuote(${quote.id})">Favourite</button>
+                                </div>
+                            </div>
+                        `;
+                        results.appendChild(quoteCard);
+                    });
+                });
+        });
+
+        function favouriteQuote(quoteId) {
+            fetch('/api/favourites', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ quote_id: quoteId })
+            }).then(response => response.json())
+            .then(data => {
+                alert('Quote favourited!');
+            });
+        }
+    </script>
+</body>
+</html>
