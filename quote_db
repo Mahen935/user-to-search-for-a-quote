@@ -1,0 +1,13 @@
+CREATE DATABASE quote_db;
+USE quote_db;
+
+CREATE TABLE quotes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    text VARCHAR(255) NOT NULL,
+    author VARCHAR(100) NOT NULL
+);
+
+INSERT INTO quotes (text, author) VALUES
+('The greatest glory in living lies not in never falling, but in rising every time we fall.', 'Nelson Mandela'),
+('The way to get started is to quit talking and begin doing.', 'Walt Disney'),
+('Your time is limited, so don’t waste it living someone else’s life.', 'Steve Jobs');
